@@ -28,14 +28,16 @@ public class Web {
         Person p = session.find(Person.class, Long.parseLong("1"));
         log.info("  >>>>>>> p >>>>>>  " + p);
 
-        Query<Person> query = session.createQuery("From Person where person_id =:id", Person.class);
-        query.setParameter("id", Long.parseLong("1"));
+        Query<Person> query = session.createQuery("From Person", Person.class);
+//        query.setParameter("id", Long.parseLong("1"));
 
-        List<Person> empList = query.list();
+        List<Person> personList = query.list();
 
-        log.info("  >>>>>>> empList >>>>>>  " + empList);
+        model.addAttribute("personList",personList);
 
-        for (Person emp: empList) {
+        log.info("  >>>>>>> empList >>>>>>  " + personList);
+
+        for (Person emp: personList) {
             log.info("  >>>>>> person >>>>>>>  " + emp);
         }
 
