@@ -28,8 +28,15 @@ public class Web {
         Person p = session.find(Person.class, Long.parseLong("1"));
         log.info("  >>>>>>> p >>>>>>  " + p);
 
-        Query<Person> query = session.createQuery("From Person where person_id =:id", Person.class);
-        query.setParameter("id", Long.parseLong("1"));
+        Person insert = new Person();
+        insert.setFirstname("Shanone");
+        insert.setLastname("Perterson");
+
+        session.saveOrUpdate(insert);
+
+        //where person_id =:id
+        Query<Person> query = session.createQuery("From Person ", Person.class);
+//        query.setParameter("id", Long.parseLong("1"));
 
         List<Person> empList = query.list();
 
