@@ -21,12 +21,13 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.29'
 //	runtimeOnly 'mysql:mysql-connector-java:5.1.31'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	compileOnly 'org.springframework.boot:spring-boot-devtools:2.6.7'
+	compileOnly 'org.springframework.boot:spring-boot-devtools:2.7.0'
 }
 
 tasks.named('test') {
