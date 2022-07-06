@@ -34,14 +34,14 @@ public class Web {
         Person p = session.find(Person.class, Long.parseLong("1"));
         log.info("  >>>>>>> p >>>>>>  " + p);
 
-        Person insert = new Person();
-        insert.setFirstname("Shanone");
-        insert.setLastname("Perterson");
-
-        session.saveOrUpdate(insert);
+//        Person insert = new Person();
+//        insert.setFirstname("Shanone");
+//        insert.setLastname("Perterson");
+//
+//        session.saveOrUpdate(insert);
 
         //where person_id =:id
-        Query<Person> query = session.createQuery("From Person  order by person_id asc ", Person.class);
+        Query<Person> query = session.createQuery("From Person  order by person_id desc ", Person.class);
 //        query.setParameter("id", Long.parseLong("1"));
 
         int totalSize = query.list().size();
