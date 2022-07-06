@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,7 +20,7 @@
                     <span class="title">Home</span>
                 </a>
             </li>
-            <li class="list"> 
+            <li class="list">
                 <b></b>
                 <b></b>
                 <a href="#">
@@ -45,32 +46,18 @@
             </li>
         </ul>
     </div>
-    <div class="main" id="main">
-        <table class="content">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>FirstName</th>
-                    <th>LastName</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>FirstName</td>
-                    <td>LastName</td>
-                </tr>
-                <tr class="active-row">
-                    <td>2</td>
-                    <td>FirstName</td>
-                    <td>LastName</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>FirstName</td>
-                    <td>LastName</td>
-                </tr>
-            </tbody>
+    <div class="main">
+        <table class="content" id="main" >
+            <tr>
+                <th>seq</th>
+                <th>아이디</th>
+                <th>이름</th>
+            </tr>
+            <tr th:each="person:${personList}">
+                <td th:text="${person.person_id}" />
+                <td th:text="${person.firstname}" />
+                <td th:text="${person.lastname}" />
+            </tr>
         </table>
     </div>
     <div class="toggle">
@@ -82,8 +69,8 @@
             <li>
                 <a href="#">
                     <span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>
-                </a>    
-            </li>    
+                </a>
+            </li>
         </ul>
     </div>
 </body>
@@ -114,23 +101,29 @@
     }
 
 </script>
-<script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
     function getJson(method) {        
         $.ajax({
-            url: "/hibernate/getPerson",
+            url: "/getPerson",
             data: { },  
             method: "GET",
-            dataType: "json"
+//            dataType: "text"
             })
             .done(function(json) {
-                $("#main").text(json.firstname + ", " + json.lastname);
+
+                /*[# th:each="tmp : ${personList}"]*/
+                console.log(/*[[${tmp.firstname}]]*/);
+                /*[/]*/
+                $('#main').replaceWith(json);
+                console.log(json);
             })
             .fail(function(xhr, status, errorThrown) {
-                alert("error : "+errorThrown);
+                alert("fail : "+errorThrown);
             })
             .always(function(xhr, status) {
             });
     }
-
+    /*]]>*/
 </script>
 </html>

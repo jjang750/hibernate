@@ -11,18 +11,22 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("hibernate")
 public class Web {
 
     private static final Logger log = LoggerFactory.getLogger(Web.class);
 
     @GetMapping("/getPerson")
     @CrossOrigin(origins = "http://127.0.0.1")
-    public Person web(Model model) {
+    public ModelAndView web(Model model) {
         log.info(" >>>>>>>>>>>>>>>> hello world <<<<<<<<<<<<<<<<<<< ");
         model.addAttribute("service", "web");
 
@@ -45,12 +49,19 @@ public class Web {
         List<Person> empList = query.list();
 
         log.info("  >>>>>>> empList >>>>>>  " + empList);
+//
+//        for (Person emp: empList) {
+//            log.info("  >>>>>> person >>>>>>>  " + emp);
+//        }
 
-        for (Person emp: empList) {
-            log.info("  >>>>>> person >>>>>>>  " + emp);
-        }
+        model.addAttribute("personList", empList);
 
-        return insert;
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("service", "web");
+        mv.addObject("personList", empList);
+        mv.setViewName("index::#main");
+
+        return mv;
     }
 
 }
