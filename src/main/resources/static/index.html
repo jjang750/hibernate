@@ -101,9 +101,8 @@
     }
 
 </script>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    function getJson(method) {        
+<script>
+    function getJson(method) {
         $.ajax({
             url: "/getPerson",
             data: { },  
@@ -111,10 +110,6 @@
 //            dataType: "text"
             })
             .done(function(json) {
-
-                /*[# th:each="tmp : ${personList}"]*/
-                console.log(/*[[${tmp.firstname}]]*/);
-                /*[/]*/
                 $('#main').replaceWith(json);
                 console.log(json);
             })
@@ -124,6 +119,5 @@
             .always(function(xhr, status) {
             });
     }
-    /*]]>*/
 </script>
 </html>
