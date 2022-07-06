@@ -137,7 +137,8 @@ body
 .main
 {
     position: fixed;
-    top: 20px;
+    top:
+    0px;
     left: 120px;
     bottom: 20px;
     right: 20px;
@@ -218,7 +219,7 @@ body
 .content
 {
     border-collapse: collapse;
-    margin: 25px 25px 0;
+    margin: 120px 25px 0;
     font-size: 0.9em;
     min-width: 400px;
     border-radius: 5px 5px 0 0;
@@ -254,4 +255,14 @@ body
 {
     font-weight: bold;
     color: #009879;
+}
+.paging
+{
+    position: relative;
+    display: block;
+    text-align: center;
+    margin: 25px 25px 0;
+    font-size: 0.9em;
+    min-width: 400px;
+    overflow: hidden;
 }

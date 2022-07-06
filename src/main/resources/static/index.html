@@ -59,6 +59,7 @@
                 <td th:text="${person.lastname}" />
             </tr>
         </table>
+        <div class="paging" th:text="${totalSize}">1</div>
     </div>
     <div class="toggle">
         <ion-icon name="menu-outline" class="open"></ion-icon>
@@ -105,7 +106,7 @@
     function getJson(method) {
         $.ajax({
             url: "/getPerson",
-            data: { },  
+            data: {"requestPage":1},
             method: "GET",
 //            dataType: "text"
             })

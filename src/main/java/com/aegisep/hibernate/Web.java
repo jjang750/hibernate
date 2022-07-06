@@ -7,10 +7,7 @@ import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
@@ -26,9 +23,10 @@ public class Web {
 
     @GetMapping("/getPerson")
     @CrossOrigin(origins = "http://127.0.0.1")
-    public ModelAndView web(Model model) {
+    public ModelAndView web(@RequestParam(value="requestPage") int requestPage) {
         log.info(" >>>>>>>>>>>>>>>> hello world <<<<<<<<<<<<<<<<<<< ");
-        model.addAttribute("service", "web");
+
+        int numPerPage = 10;
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
@@ -43,21 +41,23 @@ public class Web {
         session.saveOrUpdate(insert);
 
         //where person_id =:id
-        Query<Person> query = session.createQuery("From Person ", Person.class);
+        Query<Person> query = session.createQuery("From Person  order by person_id asc ", Person.class);
 //        query.setParameter("id", Long.parseLong("1"));
+
+        int totalSize = query.list().size();
+
+        log.info("  >>>>>>> empList  totalSize >>>>>>  " + totalSize);
+
+        query.setFirstResult((requestPage-1) * numPerPage);
+        query.setMaxResults(numPerPage);
 
         List<Person> empList = query.list();
 
-        log.info("  >>>>>>> empList >>>>>>  " + empList);
-//
-//        for (Person emp: empList) {
-//            log.info("  >>>>>> person >>>>>>>  " + emp);
-//        }
-
-        model.addAttribute("personList", empList);
+        log.info("  >>>>>>> empList >>>>>>  " + empList.size());
 
         ModelAndView mv = new ModelAndView();
         mv.addObject("service", "web");
+        mv.addObject("totalSize", totalSize);
         mv.addObject("personList", empList);
         mv.setViewName("index::#main");
 
