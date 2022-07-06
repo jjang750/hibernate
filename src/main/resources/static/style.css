@@ -261,8 +261,7 @@ body
     position: relative;
     display: block;
     text-align: center;
-    margin: 25px 25px 0;
+    margin: 5px 5px 0;
     font-size: 0.9em;
-    min-width: 400px;
     overflow: hidden;
 }

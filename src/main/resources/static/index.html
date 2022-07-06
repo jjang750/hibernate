@@ -15,7 +15,7 @@
             <li class="list active">
                 <b></b>
                 <b></b>
-                <a href="#" onclick="getJson('GET')">
+                <a href="#" onclick="getJson(1)">
                     <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
                     <span class="title">Home</span>
                 </a>
@@ -58,8 +58,17 @@
                 <td th:text="${person.firstname}" />
                 <td th:text="${person.lastname}" />
             </tr>
+            <tr>
+                <td colspan="3">
+                    <table th:with="p=${totalSize/10}">
+                        <tr>
+                            <td th:each="page:${#numbers.sequence(1, p)}"><a th:text="${page}" th:onclick="'getJson(' + ${page} + ');'"></a></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
         </table>
-        <div class="paging" th:text="${totalSize}">1</div>
+
     </div>
     <div class="toggle">
         <ion-icon name="menu-outline" class="open"></ion-icon>
@@ -102,13 +111,12 @@
     }
 
 </script>
-<script>
-    function getJson(method) {
+<script th:inline="javascript">
+    function getJson(requestPage) {
         $.ajax({
             url: "/getPerson",
-            data: {"requestPage":1},
-            method: "GET",
-//            dataType: "text"
+            data: {"requestPage":requestPage},
+            method: "GET"
             })
             .done(function(json) {
                 $('#main').replaceWith(json);
