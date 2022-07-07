@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,7 +24,7 @@ public class Web {
 
     @GetMapping("/getPerson")
     @CrossOrigin(origins = "http://127.0.0.1")
-    public ModelAndView web(@RequestParam(value="requestPage") int requestPage) {
+    public ModelAndView getPerson(@RequestParam(value="requestPage") int requestPage) {
         log.info(" >>>>>>>>>>>>>>>> hello world <<<<<<<<<<<<<<<<<<< ");
 
         int numPerPage = 10;
@@ -33,12 +34,6 @@ public class Web {
 
         Person p = session.find(Person.class, Long.parseLong("1"));
         log.info("  >>>>>>> p >>>>>>  " + p);
-
-//        Person insert = new Person();
-//        insert.setFirstname("Shanone");
-//        insert.setLastname("Perterson");
-//
-//        session.saveOrUpdate(insert);
 
         //where person_id =:id
         Query<Person> query = session.createQuery("From Person  order by person_id desc ", Person.class);
@@ -56,10 +51,42 @@ public class Web {
         log.info("  >>>>>>> empList >>>>>>  " + empList.size());
 
         ModelAndView mv = new ModelAndView();
-        mv.addObject("service", "web");
         mv.addObject("totalSize", totalSize);
         mv.addObject("personList", empList);
         mv.setViewName("index::#main");
+
+        session.close();
+
+        return mv;
+    }
+
+    @PostMapping("/setPerson")
+    @CrossOrigin(origins = "http://127.0.0.1")
+    public ModelAndView setPerson(
+            @RequestParam(value="firstName")
+            String firstName,
+            @RequestParam(value="lastName")
+            String lastName) {
+        log.info(" >>>>>>>>>>>>>>>> setPerson <<<<<<<<<<<<<<<<<<< ");
+
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+        session.getTransaction().begin();
+
+        Person insert = new Person();
+        insert.setFirstname(firstName);
+        insert.setLastname(lastName);
+
+        session.save(insert);
+
+        session.getTransaction().commit();
+        session.close();
+
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("firstName", firstName);
+        mv.addObject("lastName", lastName);
+        mv.setViewName("profile::#main");
 
         return mv;
     }

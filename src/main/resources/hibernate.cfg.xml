@@ -14,6 +14,7 @@
 <!--        <property name="hibernate.connection.username">panthip</property>-->
 <!--        <property name="hibernate.connection.password">1qaz2wsx</property>-->
         <!-- Connection Pool Size -->
+        <property name="hibernate.connection.autocommit">true</property>
         <property name="hibernate.connection.pool_size">1</property>
 
         <!-- Outputs the SQL queries, should be disabled in Production -->
