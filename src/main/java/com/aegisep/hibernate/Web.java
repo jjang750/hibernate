@@ -22,7 +22,7 @@ public class Web {
 
     private static final Logger log = LoggerFactory.getLogger(Web.class);
 
-    @GetMapping("/getPerson")
+    @GetMapping("/getPersons")
     @CrossOrigin(origins = "http://127.0.0.1")
     public ModelAndView getPerson(@RequestParam(value="requestPage") int requestPage) {
         log.info(" >>>>>>>>>>>>>>>> hello world <<<<<<<<<<<<<<<<<<< ");
@@ -90,5 +90,47 @@ public class Web {
 
         return mv;
     }
+
+    @PostMapping("/searchPerson")
+    @CrossOrigin(origins = "http://127.0.0.1")
+    public ModelAndView searchPerson(
+            @RequestParam(value="firstName")
+            String firstName) {
+        log.info(" >>>>>>>>>>>>>>>> hello world <<<<<<<<<<<<<<<<<<< ");
+
+        int numPerPage = 10;
+
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+
+//        Person p = session.find(Person.class, firstName);
+//        log.info("  >>>>>>> p >>>>>>  " + p);
+
+        //where person_id =:id
+        Query<Person> query = session.createQuery("From Person where firstName =:firstName order by person_id desc ", Person.class);
+        query.setParameter("firstName", firstName);
+
+        int totalSize = query.list().size();
+
+        log.info("  >>>>>>> empList  totalSize >>>>>>  " + totalSize);
+
+        query.setFirstResult(0);
+        query.setMaxResults(numPerPage);
+
+        List<Person> empList = query.list();
+
+        log.info("  >>>>>>> empList >>>>>>  " + empList.size());
+
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("totalSize", totalSize);
+        mv.addObject("firstName", firstName);
+        mv.addObject("personList", empList);
+        mv.setViewName("search::#main");
+
+        session.close();
+
+        return mv;
+    }
+
 
 }

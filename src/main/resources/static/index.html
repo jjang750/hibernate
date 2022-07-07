@@ -10,7 +10,7 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="navigation" onmouseover="this.className='navigation active';main.className='main active'" onmouseleave="this.className='navigation';main.className='main'">
+    <div class="navigation">
         <ul>
             <li class="list active">
                 <b></b>
@@ -31,9 +31,9 @@
             <li class="list">
                 <b></b>
                 <b></b>
-                <a href="#">
+                <a href="/search.html">
                     <span class="icon"><ion-icon name="people-outline"></ion-icon></span>
-                    <span class="title">Team</span>
+                    <span class="title">Search</span>
                 </a>
             </li>
             <li class="list">
@@ -68,7 +68,6 @@
                 </td>
             </tr>
         </table>
-
     </div>
     <div class="toggle">
         <ion-icon name="menu-outline" class="open"></ion-icon>
@@ -114,7 +113,7 @@
 <script th:inline="javascript">
     function getJson(requestPage) {
         $.ajax({
-            url: "/getPerson",
+            url: "/getPersons",
             data: {"requestPage":requestPage},
             method: "GET"
             })

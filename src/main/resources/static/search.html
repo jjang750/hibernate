@@ -10,6 +10,7 @@
     <title>Document</title>
 </head>
 <body>
+<!-- onmouseover="this.className='navigation active';main.className='main active'" onmouseleave="this.className='navigation';main.className='main'" -->
 <div class="navigation">
     <ul>
         <li class="list">
@@ -20,18 +21,18 @@
                 <span class="title">Home</span>
             </a>
         </li>
-        <li class="list active">
+        <li class="list">
             <b></b>
             <b></b>
-            <a href="#">
+            <a href="/profile.html">
                 <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
                 <span class="title">Profile</span>
             </a>
         </li>
-        <li class="list">
+        <li class="list active">
             <b></b>
             <b></b>
-            <a href="/search.html">
+            <a href="#">
                 <span class="icon"><ion-icon name="people-outline"></ion-icon></span>
                 <span class="title">Search</span>
             </a>
@@ -49,15 +50,20 @@
 <div class="main">
     <table class="content" id="main" >
         <tr>
+            <td colspan="3">
+                <input type="text" id="firstName" th:value="${firstName}">
+                <input type="button" value="이름검색" onclick="searchPerson()">
+            </td>
+        </tr>
+        <tr>
+            <th>seq</th>
             <th>이름</th>
             <th>성</th>
         </tr>
-        <tr>
-            <td><input type="text" id="firstName" th:value="${firstName}"></td>
-            <td><input type="text" id="lastName" th:value="${lastName}"></td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="button" value="저장" onclick="setPerson();"></td>
+        <tr th:each="person:${personList}">
+            <td th:text="${person.person_id}" />
+            <td th:text="${person.firstname}" />
+            <td th:text="${person.lastname}" />
         </tr>
     </table>
 
@@ -103,17 +109,16 @@
 
 </script>
 <script>
-    function setPerson() {
+    function searchPerson() {
         $.ajax({
-            url: "/setPerson",
+            url: "/searchPerson",
             data: {
-                "firstName":$('#firstName').val(),
-                "lastName":$('#lastName').val()
+                "firstName":$('#firstName').val()
             },
             method: "POST"
             })
             .done(function(h) {
-                alert('잘 저장되었어요.');
+                $('#main').replaceWith(h);
                 console.log(h);
             })
             .fail(function(xhr, status, errorThrown) {
