@@ -86,7 +86,7 @@ public class Web {
         ModelAndView mv = new ModelAndView();
         mv.addObject("firstName", firstName);
         mv.addObject("lastName", lastName);
-        mv.setViewName("profile::#main");
+        mv.setViewName("index::#profile");
 
         return mv;
     }
@@ -94,8 +94,8 @@ public class Web {
     @PostMapping("/searchPerson")
     @CrossOrigin(origins = "http://127.0.0.1")
     public ModelAndView searchPerson(
-            @RequestParam(value="firstName")
-            String firstName) {
+            @RequestParam(value="searchName")
+            String searchName) {
         log.info(" >>>>>>>>>>>>>>>> hello world <<<<<<<<<<<<<<<<<<< ");
 
         int numPerPage = 10;
@@ -108,7 +108,7 @@ public class Web {
 
         //where person_id =:id
         Query<Person> query = session.createQuery("From Person where firstName =:firstName order by person_id desc ", Person.class);
-        query.setParameter("firstName", firstName);
+        query.setParameter("firstName", searchName);
 
         int totalSize = query.list().size();
 
@@ -123,9 +123,9 @@ public class Web {
 
         ModelAndView mv = new ModelAndView();
         mv.addObject("totalSize", totalSize);
-        mv.addObject("firstName", firstName);
+        mv.addObject("firstName", searchName);
         mv.addObject("personList", empList);
-        mv.setViewName("search::#main");
+        mv.setViewName("index::#search");
 
         session.close();
 

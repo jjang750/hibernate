@@ -15,7 +15,7 @@
             <li class="list active">
                 <b></b>
                 <b></b>
-                <a href="#" onclick="getJson(1)">
+                <a href="#" onclick="goto('index')">
                     <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
                     <span class="title">Home</span>
                 </a>
@@ -23,7 +23,7 @@
             <li class="list">
                 <b></b>
                 <b></b>
-                <a href="/profile.html">
+                <a href="#" onclick="goto('profile')">
                     <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
                     <span class="title">Profile</span>
                 </a>
@@ -31,7 +31,7 @@
             <li class="list">
                 <b></b>
                 <b></b>
-                <a href="/search.html">
+                <a href="#" onclick="goto('search')">
                     <span class="icon"><ion-icon name="people-outline"></ion-icon></span>
                     <span class="title">Search</span>
                 </a>
@@ -46,8 +46,8 @@
             </li>
         </ul>
     </div>
-    <div class="main">
-        <table class="content" id="main" >
+    <div class="main" id="main">
+        <table class="content">
             <tr>
                 <th>seq</th>
                 <th>이름</th>
@@ -62,12 +62,48 @@
                 <td colspan="3">
                     <table th:with="p=${totalSize/10}">
                         <tr>
-                            <td th:each="page:${#numbers.sequence(1, p)}"><a th:text="${page}" th:onclick="'getJson(' + ${page} + ');'"></a></td>
+                            <td th:each="page:${#numbers.sequence(1, p)}"><a th:text="${page}" th:onclick="'getPerson(' + ${page} + ');'"></a></td>
                         </tr>
                     </table>
                 </td>
             </tr>
         </table>
+    </div>
+    <div class="main" id="profile" style="display:none">
+        <table class="content">
+            <tr>
+                <th>이름</th>
+                <th>성</th>
+            </tr>
+            <tr>
+                <td><input type="text" id="firstName" th:value="${firstName}"></td>
+                <td><input type="text" id="lastName" th:value="${lastName}"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="button" value="저장" onclick="setPerson();"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="main" id="search" style="display:none">
+        <table class="content">
+            <tr>
+                <td colspan="3">
+                    <input type="text" id="searchName" th:value="${firstName}">
+                    <input type="button" value="이름검색" onclick="searchPerson()">
+                </td>
+            </tr>
+            <tr>
+                <th>seq</th>
+                <th>이름</th>
+                <th>성</th>
+            </tr>
+            <tr th:each="person:${personList}">
+                <td th:text="${person.person_id}" />
+                <td th:text="${person.firstname}" />
+                <td th:text="${person.lastname}" />
+            </tr>
+        </table>
+
     </div>
     <div class="toggle">
         <ion-icon name="menu-outline" class="open"></ion-icon>
@@ -109,16 +145,75 @@
         };
     }
 
+    function goto(id) {
+        if(id == 'index') {
+            $("#index").show();
+            $("#profile").hide();
+            $("#search").hide();
+            getPerson(1);
+        }else if(id == 'profile') {
+            $("#index").hide();
+            $("#profile").show();
+            $("#search").hide();
+        }else if(id == 'search') {
+            $("#index").hide();
+            $("#profile").hide();
+            $("#search").show();
+        }
+    }
+
 </script>
 <script th:inline="javascript">
-    function getJson(requestPage) {
+    function getPerson(requestPage) {
         $.ajax({
             url: "/getPersons",
             data: {"requestPage":requestPage},
             method: "GET"
             })
             .done(function(h) {
+                $('#main').show()
                 $('#main').replaceWith(h);
+                console.log(h);
+            })
+            .fail(function(xhr, status, errorThrown) {
+                alert("fail : "+errorThrown);
+            })
+            .always(function(xhr, status) {
+            });
+    }
+
+    function setPerson() {
+        $.ajax({
+            url: "/setPerson",
+            data: {
+                "firstName":$('#firstName').val(),
+                "lastName":$('#lastName').val()
+            },
+            method: "POST"
+            })
+            .done(function(h) {
+                $('#profile').show()
+                alert('잘 저장되었어요.');
+                console.log(h);
+            })
+            .fail(function(xhr, status, errorThrown) {
+                alert("fail : "+errorThrown);
+            })
+            .always(function(xhr, status) {
+            });
+    }
+
+    function searchPerson() {
+        $.ajax({
+            url: "/searchPerson",
+            data: {
+                "searchName":$('#searchName').val()
+            },
+            method: "POST"
+            })
+            .done(function(h) {
+                $('#search').replaceWith(h);
+                $('#search').show()
                 console.log(h);
             })
             .fail(function(xhr, status, errorThrown) {
